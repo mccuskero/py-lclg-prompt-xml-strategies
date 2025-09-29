@@ -1,0 +1,178 @@
+[project]
+name = "supervisor-multi-agent-create-car"
+version = "0.1.0"
+description = "A supervisor-based multi-agent system for creating car JSON build descriptions using LangChain and LangGraph"
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["langchain", "langgraph", "multi-agent", "car", "json", "ai", "ollama"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    # Local prompt-xml-strategies framework (includes jsonschema, pydantic, jinja2, lxml, xmlschema)
+    # "prompt-xml-strategies @ file://../../../dist/prompt_xml_strategies-0.1.0-py3-none-any.whl",
+    "prompt-xml-strategies",
+
+    # LangChain v1.0.0a9 alpha and compatible LangGraph
+    "langchain==1.0.0a9",
+    "langgraph>=0.6.7,<2.0.0",
+    "langchain-core>=0.3.0",
+    "langchain-community>=0.3.0",
+
+    # Project-specific dependencies not included in prompt-xml-strategies
+    "requests>=2.31.0",
+    "click>=8.1.0",
+    "rich>=13.0.0",
+    "pyyaml>=6.0.0",
+    "typing-extensions>=4.0.0",
+]
+
+[tool.uv.sources]
+prompt_xml_strategies = { path = "../../../", editable=true }
+
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-xdist>=3.3.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.7.0",
+    "pre-commit>=3.5.0",
+    "hypothesis>=6.88.0",
+]
+test = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "pytest-asyncio>=0.21.0",
+]
+ollama = [
+    # For Ollama LLM integration
+    "langchain-ollama>=0.1.0",
+]
+
+[project.scripts]
+car-creation-cli = "src.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/carcreation/supervisor-multi-agent-create-car"
+Repository = "https://github.com/carcreation/supervisor-multi-agent-create-car"
+Issues = "https://github.com/carcreation/supervisor-multi-agent-create-car/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src",
+    "--cov-branch",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-fail-under=80",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow tests that may take a while",
+    "llm: Tests that require LLM API access",
+    "ollama: Tests that require Ollama server",
+    "multi_agent: Multi-agent system tests",
+]
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.black]
+target-version = ["py310"]
+line-length = 88
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "langchain.*",
+    "langgraph.*",
+    "lxml.*",
+    "xmlschema.*",
+    "requests.*",
+]
+ignore_missing_imports = true
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-cov>=6.3.0",
+    "pytest-mock>=3.15.0",
+    "pytest-asyncio>=0.21.0",
+]

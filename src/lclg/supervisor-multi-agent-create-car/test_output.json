@@ -1,0 +1,24 @@
+{
+  "car_json": null,
+  "workflow_status": "validation_error",
+  "completed_agents": [],
+  "validation_results": {},
+  "errors": [
+    "Engine phase failed: Failed to create component: 'ChatOllama' object has no attribute '_call'",
+    "Body phase failed: Failed to create component: 'ChatOllama' object has no attribute '_call'",
+    "Electrical phase failed: Failed to create component: 'ChatOllama' object has no attribute '_call'",
+    "Tire phase failed: Failed to create component: 'ChatOllama' object has no attribute '_call'",
+    "Missing components for assembly: ['engine_data', 'body_data', 'tire_data', 'electrical_data']",
+    "No car JSON to validate"
+  ],
+  "execution_mode": "hybrid",
+  "system_info": {
+    "execution_time_seconds": 0.006692,
+    "execution_start": "2025-09-28T23:13:31.920173",
+    "execution_end": "2025-09-28T23:13:31.926865",
+    "model_used": "llama3.2",
+    "base_url": "http://localhost:11434",
+    "execution_mode": "hybrid",
+    "system_validation": "agents_ready_ollama_issue"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated JSON Schema for carType",
+  "properties": {
+    "Engine": {
+      "$ref": "#/$defs/engineType",
+      "description": "Element: Engine"
+    },
+    "Body": {
+      "$ref": "#/$defs/bodyType",
+      "description": "Element: Body"
+    },
+    "Tire": {
+      "$ref": "#/$defs/tireType",
+      "description": "Element: Tire"
+    },
+    "Electrical": {
+      "$ref": "#/$defs/electricalType",
+      "description": "Element: Electrical"
+    },
+    "@vin": {
+      "type": "string",
+      "description": "Attribute: vin"
+    },
+    "@year": {
+      "type": "string",
+      "description": "Attribute: year"
+    },
+    "@make": {
+      "type": "string",
+      "description": "Attribute: make"
+    },
+    "@model": {
+      "type": "string",
+      "description": "Attribute: model"
+    }
+  },
+  "description": "A complete car structure with all major components.\n                Uses xs:all to ensure all parts are required but order-independent.",
+  "type": "object",
+  "required": [
+    "Engine",
+    "Body",
+    "Tire",
+    "Electrical",
+    "@vin",
+    "@year",
+    "@make",
+    "@model"
+  ],
+  "$id": "http://example.com/types/carType"
+}

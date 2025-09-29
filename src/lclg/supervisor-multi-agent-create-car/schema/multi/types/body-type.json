@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated JSON Schema for bodyType",
+  "properties": {
+    "style": {
+      "$ref": "#/$defs/bodyStyleEnum",
+      "description": "Element: style"
+    },
+    "color": {
+      "$ref": "#/$defs/string",
+      "description": "Element: color"
+    },
+    "doors": {
+      "type": "string",
+      "description": "Element: doors"
+    },
+    "material": {
+      "$ref": "#/$defs/materialEnum",
+      "description": "Element: material"
+    },
+    "@paintCode": {
+      "type": "string",
+      "description": "Attribute: paintCode"
+    },
+    "@customized": {
+      "type": "boolean",
+      "description": "Attribute: customized"
+    }
+  },
+  "description": "Body structure and appearance details",
+  "type": "object",
+  "required": [
+    "style",
+    "color",
+    "doors",
+    "material"
+  ],
+  "$id": "http://example.com/types/bodyType"
+}

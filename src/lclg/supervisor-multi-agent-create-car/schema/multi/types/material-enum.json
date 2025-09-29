@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated JSON Schema for materialEnum",
+  "properties": {},
+  "type": "string",
+  "enum": [
+    "steel",
+    "aluminum",
+    "carbon-fiber",
+    "composite",
+    "fiberglass"
+  ],
+  "$id": "http://example.com/types/materialEnum"
+}

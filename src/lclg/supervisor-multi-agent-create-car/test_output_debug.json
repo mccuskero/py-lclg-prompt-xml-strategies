@@ -1,0 +1,25 @@
+{
+  "car_json": null,
+  "workflow_status": "validation_error",
+  "completed_agents": [
+    "engine",
+    "body",
+    "tire"
+  ],
+  "validation_results": {},
+  "errors": [
+    "Electrical phase failed: Could not extract valid JSON from response",
+    "Missing components for assembly: ['electrical_data']",
+    "No car JSON to validate"
+  ],
+  "execution_mode": "hybrid",
+  "system_info": {
+    "execution_time_seconds": 38.506974,
+    "execution_start": "2025-09-28T23:31:40.583507",
+    "execution_end": "2025-09-28T23:32:19.090481",
+    "model_used": "llama3.2",
+    "base_url": "http://localhost:11434",
+    "execution_mode": "hybrid",
+    "system_validation": "ready"
+  }
+}
