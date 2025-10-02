@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated JSON Schema for bodyStyleEnum",
+  "properties": {},
+  "type": "string",
+  "enum": [
+    "sedan",
+    "coupe",
+    "hatchback",
+    "suv",
+    "truck",
+    "convertible",
+    "wagon"
+  ],
+  "$id": "http://example.com/types/bodyStyleEnum"
+}

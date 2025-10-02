@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://example.com/consolidated",
+  "title": "Consolidated JSON Schema",
+  "type": "object",
+  "properties": {
+    "carType": {
+      "$ref": "#/$defs/carType"
+    },
+    "engineType": {
+      "$ref": "#/$defs/engineType"
+    },
+    "bodyType": {
+      "$ref": "#/$defs/bodyType"
+    },
+    "seasonEnum": {
+      "$ref": "#/$defs/seasonEnum"
+    },
+    "tireType": {
+      "$ref": "#/$defs/tireType"
+    },
+    "electricalSystemEnum": {
+      "$ref": "#/$defs/electricalSystemEnum"
+    },
+    "electricalType": {
+      "$ref": "#/$defs/electricalType"
+    },
+    "fuelTypeEnum": {
+      "$ref": "#/$defs/fuelTypeEnum"
+    },
+    "bodyStyleEnum": {
+      "$ref": "#/$defs/bodyStyleEnum"
+    },
+    "materialEnum": {
+      "$ref": "#/$defs/materialEnum"
+    },
+    "car": {
+      "$ref": "#/$defs/car"
+    }
+  },
+  "$defs": {
+    "carType": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for carType",
+      "properties": {
+        "Engine": {
+          "$ref": "#/$defs/engineType",
+          "description": "Element: Engine"
+        },
+        "Body": {
+          "$ref": "#/$defs/bodyType",
+          "description": "Element: Body"
+        },
+        "Tire": {
+          "$ref": "#/$defs/tireType",
+          "description": "Element: Tire"
+        },
+        "Electrical": {
+          "$ref": "#/$defs/electricalType",
+          "description": "Element: Electrical"
+        },
+        "@vin": {
+          "type": "string",
+          "description": "Attribute: vin"
+        },
+        "@year": {
+          "type": "string",
+          "description": "Attribute: year"
+        },
+        "@make": {
+          "type": "string",
+          "description": "Attribute: make"
+        },
+        "@model": {
+          "type": "string",
+          "description": "Attribute: model"
+        }
+      },
+      "description": "A complete car structure with all major components.\n                Uses xs:all to ensure all parts are required but order-independent.",
+      "type": "object",
+      "required": [
+        "Engine",
+        "Body",
+        "Tire",
+        "Electrical",
+        "@vin",
+        "@year",
+        "@make",
+        "@model"
+      ]
+    },
+    "engineType": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for engineType",
+      "properties": {
+        "displacement": {
+          "type": "string",
+          "description": "Element: displacement"
+        },
+        "cylinders": {
+          "type": "string",
+          "description": "Element: cylinders"
+        },
+        "fuelType": {
+          "$ref": "#/$defs/fuelTypeEnum",
+          "description": "Element: fuelType"
+        },
+        "horsepower": {
+          "type": "string",
+          "description": "Element: horsepower"
+        },
+        "@engineCode": {
+          "type": "string",
+          "description": "Attribute: engineCode"
+        },
+        "@manufacturer": {
+          "type": "string",
+          "description": "Attribute: manufacturer"
+        }
+      },
+      "description": "Engine specifications and components",
+      "type": "object",
+      "required": [
+        "displacement",
+        "cylinders",
+        "fuelType",
+        "horsepower",
+        "@engineCode"
+      ]
+    },
+    "bodyType": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for bodyType",
+      "properties": {
+        "style": {
+          "$ref": "#/$defs/bodyStyleEnum",
+          "description": "Element: style"
+        },
+        "color": {
+          "$ref": "#/$defs/string",
+          "description": "Element: color"
+        },
+        "doors": {
+          "type": "string",
+          "description": "Element: doors"
+        },
+        "material": {
+          "$ref": "#/$defs/materialEnum",
+          "description": "Element: material"
+        },
+        "@paintCode": {
+          "type": "string",
+          "description": "Attribute: paintCode"
+        },
+        "@customized": {
+          "type": "boolean",
+          "description": "Attribute: customized"
+        }
+      },
+      "description": "Body structure and appearance details",
+      "type": "object",
+      "required": [
+        "style",
+        "color",
+        "doors",
+        "material"
+      ]
+    },
+    "seasonEnum": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for seasonEnum",
+      "properties": {},
+      "type": "string",
+      "enum": [
+        "all-season",
+        "summer",
+        "winter",
+        "performance"
+      ]
+    },
+    "tireType": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for tireType",
+      "properties": {
+        "brand": {
+          "$ref": "#/$defs/string",
+          "description": "Element: brand"
+        },
+        "size": {
+          "$ref": "#/$defs/string",
+          "description": "Element: size"
+        },
+        "pressure": {
+          "type": "string",
+          "description": "Element: pressure"
+        },
+        "treadDepth": {
+          "type": "string",
+          "description": "Element: treadDepth"
+        },
+        "@season": {
+          "type": "string",
+          "description": "Attribute: season"
+        },
+        "@runFlat": {
+          "type": "boolean",
+          "description": "Attribute: runFlat"
+        }
+      },
+      "description": "Tire specifications and details",
+      "type": "object",
+      "required": [
+        "brand",
+        "size",
+        "pressure",
+        "treadDepth",
+        "@season"
+      ]
+    },
+    "electricalSystemEnum": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for electricalSystemEnum",
+      "properties": {},
+      "type": "string",
+      "enum": [
+        "12V",
+        "24V",
+        "hybrid",
+        "high-voltage"
+      ]
+    },
+    "electricalType": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for electricalType",
+      "properties": {
+        "batteryVoltage": {
+          "type": "string",
+          "description": "Element: batteryVoltage"
+        },
+        "alternatorOutput": {
+          "type": "string",
+          "description": "Element: alternatorOutput"
+        },
+        "wiringHarness": {
+          "$ref": "#/$defs/string",
+          "description": "Element: wiringHarness"
+        },
+        "ecuVersion": {
+          "$ref": "#/$defs/string",
+          "description": "Element: ecuVersion"
+        },
+        "@systemType": {
+          "type": "string",
+          "description": "Attribute: systemType"
+        },
+        "@hybridCapable": {
+          "type": "boolean",
+          "description": "Attribute: hybridCapable"
+        }
+      },
+      "description": "Electrical system components and specifications",
+      "type": "object",
+      "required": [
+        "batteryVoltage",
+        "alternatorOutput",
+        "wiringHarness",
+        "ecuVersion",
+        "@systemType"
+      ]
+    },
+    "fuelTypeEnum": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for fuelTypeEnum",
+      "properties": {},
+      "type": "string",
+      "enum": [
+        "gasoline",
+        "diesel",
+        "electric",
+        "hybrid",
+        "hydrogen"
+      ]
+    },
+    "bodyStyleEnum": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for bodyStyleEnum",
+      "properties": {},
+      "type": "string",
+      "enum": [
+        "sedan",
+        "coupe",
+        "hatchback",
+        "suv",
+        "truck",
+        "convertible",
+        "wagon"
+      ]
+    },
+    "materialEnum": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Generated JSON Schema for materialEnum",
+      "properties": {},
+      "type": "string",
+      "enum": [
+        "steel",
+        "aluminum",
+        "carbon-fiber",
+        "composite",
+        "fiberglass"
+      ]
+    },
+    "car": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Element: car",
+      "type": "object",
+      "description": null
+    }
+  }
+}

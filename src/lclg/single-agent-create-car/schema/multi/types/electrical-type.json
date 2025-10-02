@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated JSON Schema for electricalType",
+  "properties": {
+    "batteryVoltage": {
+      "type": "string",
+      "description": "Element: batteryVoltage"
+    },
+    "alternatorOutput": {
+      "type": "string",
+      "description": "Element: alternatorOutput"
+    },
+    "wiringHarness": {
+      "$ref": "#/$defs/string",
+      "description": "Element: wiringHarness"
+    },
+    "ecuVersion": {
+      "$ref": "#/$defs/string",
+      "description": "Element: ecuVersion"
+    },
+    "@systemType": {
+      "type": "string",
+      "description": "Attribute: systemType"
+    },
+    "@hybridCapable": {
+      "type": "boolean",
+      "description": "Attribute: hybridCapable"
+    }
+  },
+  "description": "Electrical system components and specifications",
+  "type": "object",
+  "required": [
+    "batteryVoltage",
+    "alternatorOutput",
+    "wiringHarness",
+    "ecuVersion",
+    "@systemType"
+  ],
+  "$id": "http://example.com/types/electricalType"
+}
