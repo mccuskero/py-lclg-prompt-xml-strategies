@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated JSON Schema for tireType",
+  "properties": {
+    "brand": {
+      "$ref": "#/$defs/string",
+      "description": "Element: brand"
+    },
+    "size": {
+      "$ref": "#/$defs/string",
+      "description": "Element: size"
+    },
+    "pressure": {
+      "type": "string",
+      "description": "Element: pressure"
+    },
+    "treadDepth": {
+      "type": "string",
+      "description": "Element: treadDepth"
+    },
+    "@season": {
+      "type": "string",
+      "description": "Attribute: season"
+    },
+    "@runFlat": {
+      "type": "boolean",
+      "description": "Attribute: runFlat"
+    }
+  },
+  "description": "Tire specifications and details",
+  "type": "object",
+  "required": [
+    "brand",
+    "size",
+    "pressure",
+    "treadDepth",
+    "@season"
+  ],
+  "$id": "http://example.com/types/tireType"
+}

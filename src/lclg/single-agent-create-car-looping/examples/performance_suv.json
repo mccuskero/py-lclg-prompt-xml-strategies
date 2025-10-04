@@ -1,0 +1,11 @@
+{
+  "vehicle_type": "suv",
+  "performance_level": "performance",
+  "fuel_preference": "hybrid",
+  "budget": "high",
+  "special_features": [
+    "sport package",
+    "premium sound system",
+    "adaptive cruise control"
+  ]
+}

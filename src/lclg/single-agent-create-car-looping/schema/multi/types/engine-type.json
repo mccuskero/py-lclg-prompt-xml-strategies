@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated JSON Schema for engineType",
+  "properties": {
+    "displacement": {
+      "type": "string",
+      "description": "Element: displacement"
+    },
+    "cylinders": {
+      "type": "string",
+      "description": "Element: cylinders"
+    },
+    "fuelType": {
+      "$ref": "#/$defs/fuelTypeEnum",
+      "description": "Element: fuelType"
+    },
+    "horsepower": {
+      "type": "string",
+      "description": "Element: horsepower"
+    },
+    "@engineCode": {
+      "type": "string",
+      "description": "Attribute: engineCode"
+    },
+    "@manufacturer": {
+      "type": "string",
+      "description": "Attribute: manufacturer"
+    }
+  },
+  "description": "Engine specifications and components",
+  "type": "object",
+  "required": [
+    "displacement",
+    "cylinders",
+    "fuelType",
+    "horsepower",
+    "@engineCode"
+  ],
+  "$id": "http://example.com/types/engineType"
+}

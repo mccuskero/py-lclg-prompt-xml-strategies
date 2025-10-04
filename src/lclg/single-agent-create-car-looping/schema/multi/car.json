@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://example.com/master",
+  "title": "Master Schema",
+  "description": "Master schema with references to individual type definitions. Generated from car.xsd",
+  "type": "object",
+  "properties": {
+    "carType": {
+      "$ref": "types/car-type.json"
+    },
+    "engineType": {
+      "$ref": "types/engine-type.json"
+    },
+    "bodyType": {
+      "$ref": "types/body-type.json"
+    },
+    "tireType": {
+      "$ref": "types/tire-type.json"
+    },
+    "electricalType": {
+      "$ref": "types/electrical-type.json"
+    },
+    "seasonEnum": {
+      "$ref": "types/season-enum.json"
+    },
+    "electricalSystemEnum": {
+      "$ref": "types/electrical-system-enum.json"
+    },
+    "fuelTypeEnum": {
+      "$ref": "types/fuel-type-enum.json"
+    },
+    "bodyStyleEnum": {
+      "$ref": "types/body-style-enum.json"
+    },
+    "materialEnum": {
+      "$ref": "types/material-enum.json"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated JSON Schema for seasonEnum",
+  "properties": {},
+  "type": "string",
+  "enum": [
+    "all-season",
+    "summer",
+    "winter",
+    "performance"
+  ],
+  "$id": "http://example.com/types/seasonEnum"
+}
