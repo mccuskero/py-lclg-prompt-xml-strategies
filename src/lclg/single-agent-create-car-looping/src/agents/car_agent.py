@@ -62,6 +62,9 @@ class CarAgent(BaseAgent):
         if "error" in component_data:
             return component_data
 
+        # Transform tool response format to car_configuration format if needed
+        component_data = self._transform_tool_response(component_data)
+
         # Basic validation - ensure we have the main components
         required_sections = ["engine", "body", "electrical", "tires_and_wheels"]
         car_config = component_data.get("car_configuration", {})
@@ -86,6 +89,92 @@ class CarAgent(BaseAgent):
         }
 
         return validated_data
+
+    def _transform_tool_response(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Transform tool response format into car_configuration format if needed."""
+        # If it already has car_configuration with all required sections, return as-is
+        if "car_configuration" in data:
+            car_config = data["car_configuration"]
+            if all(key in car_config for key in ["engine", "body", "electrical", "tires_and_wheels"]):
+                if self.enable_logging:
+                    logger.debug("Data already in correct format")
+                return data
+
+        if self.enable_logging:
+            logger.debug(f"Transforming data from tool response format. Keys: {list(data.keys())}")
+
+        # Create new car_configuration structure
+        car_config = {
+            "vehicle_info": {},
+            "engine": {},
+            "body": {"exterior": {}, "interior": {}},
+            "electrical": {"main_system": {}, "battery": {}, "lighting": {}},
+            "tires_and_wheels": {"tires": {}, "wheels": {}}
+        }
+
+        # Extract engine data
+        if "engineType" in data:
+            car_config["engine"] = data["engineType"]
+            if self.enable_logging:
+                logger.debug("Extracted engineType to car_config.engine")
+
+        # Extract body data
+        if "bodyType" in data:
+            body_data = data["bodyType"]
+            car_config["body"]["exterior"] = {
+                "style": body_data.get("style", ""),
+                "color": body_data.get("color", ""),
+                "doors": body_data.get("doors", "4"),
+                "material": body_data.get("material", "")
+            }
+            if self.enable_logging:
+                logger.debug("Extracted bodyType to car_config.body")
+
+        # Extract electrical data
+        if "electricalType" in data or "electrical_system" in data:
+            elec_data = data.get("electricalType", data.get("electrical_system", {}))
+            car_config["electrical"]["main_system"] = {
+                "voltage_system": elec_data.get("batteryVoltage", elec_data.get("@systemType", "")),
+                "battery_capacity": elec_data.get("batteryVoltage", "")
+            }
+            car_config["electrical"]["battery"] = {
+                "voltage": elec_data.get("batteryVoltage", ""),
+                "capacity": elec_data.get("batteryVoltage", "")
+            }
+            if self.enable_logging:
+                logger.debug("Extracted electrical data to car_config.electrical")
+
+        # Extract tire data
+        if "tireType" in data or "tires" in data:
+            tire_data = data.get("tireType", data.get("tires", {}))
+            if isinstance(tire_data, dict):
+                car_config["tires_and_wheels"]["tires"] = {
+                    "brand": tire_data.get("brand", ""),
+                    "size": tire_data.get("size", ""),
+                    "pressure": tire_data.get("pressure", "")
+                }
+                car_config["tires_and_wheels"]["wheels"] = {
+                    "size": tire_data.get("size", ""),
+                    "material": "alloy",
+                    "design": "standard"
+                }
+                if self.enable_logging:
+                    logger.debug("Extracted tire data to car_config.tires_and_wheels")
+
+        # Create the final structure
+        result = {
+            "car_configuration": car_config
+        }
+
+        # Preserve any additional metadata
+        for key in data.keys():
+            if key not in ["engineType", "bodyType", "electricalType", "tireType", "tires", "electrical_system"]:
+                result[key] = data[key]
+
+        if self.enable_logging:
+            logger.debug(f"Transformation complete. New structure keys: {list(result.keys())}")
+
+        return result
 
     def create_complete_car(self, requirements: Dict[str, Any]) -> Dict[str, Any]:
         """Create a complete car configuration using all available tools."""

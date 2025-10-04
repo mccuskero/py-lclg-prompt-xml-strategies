@@ -61,20 +61,25 @@ llm = ChatOllama(
 
 # 5. Create the agent using langchain's create_agent
 prompt = "You are a helpful assistant that can perform calculations. Use the available tools to answer questions."
-agent = create_agent(llm, tools, prompt=prompt)
-logger.info("Agent created")
 
-logger.info("Creating react agent")
-react_agent = create_react_agent(llm, tools, prompt=prompt)
-logger.info("React agent created")
+logger.info("Creating legacy react agent")
+legacy_react_agent = create_react_agent(llm, tools, prompt=prompt)
+logger.info("Legacy react agent created")
+
+logger.info("Creating Modern agent")
+modern_agent = create_agent(llm, tools, prompt=prompt)
+logger.info("Mordern Agent created")
+
 
 # 6. Use the agent to invoke a query
 if __name__ == "__main__":
     
     inputs = {"messages": [HumanMessage(content="What is the product of 5 and 3, plus 10?")]}
-    result = agent.invoke(inputs)
-    logger.info(f"Agent result: {result['messages'][-1].content}")
 
     logger.info("Invoking react agent")
-    result = react_agent.invoke(inputs)
-    logger.info(f"React agent result: {result['messages'][-1].content}")
+    result = legacy_react_agent.invoke(inputs)
+    logger.info(f"Legacy react agent result: {result['messages'][-1].content}")
+
+    logger.info("Invoking modern agent")
+    result = modern_agent.invoke(inputs) 
+    logger.info(f"Modern agent result: {result['messages'][-1].content}")

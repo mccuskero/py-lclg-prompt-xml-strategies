@@ -4,6 +4,12 @@ from typing import Dict, Any, Optional, List
 from langchain.tools import BaseTool
 from pydantic import Field
 import json
+import sys
+from pathlib import Path
+
+# Add utils module to path for logging
+sys.path.append(str(Path(__file__).parent.parent))
+from utils.logging_config import ToolLogger
 
 
 # Hardcoded body style configurations
@@ -122,13 +128,23 @@ class BodyConfigurationTool(BaseTool):
     description: str = ("Configure body style, materials, doors, and color based on vehicle requirements "
                        "and engine compartment constraints. Returns complete bodyType JSON.")
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._logger = ToolLogger(self.name)
+
+    @property
+    def logger(self):
+        """Get the logger instance."""
+        return self._logger
+
     def _run(
         self,
         style: str = "sedan",
         engine_constraints: Optional[str] = None,
         performance_level: str = "standard",
         customization_level: str = "standard",
-        color_preference: str = "auto"
+        color_preference: str = "auto",
+        **kwargs
     ) -> str:
         """Configure body based on requirements and constraints.
 
@@ -280,7 +296,7 @@ class BodyStyleTool(BaseTool):
     description: str = ("Get detailed information about body styles, material properties, "
                        "and compatibility with different engine types and performance requirements.")
 
-    def _run(self, style: str = "sedan", detailed: bool = True) -> str:
+    def _run(self, style: str = "sedan", detailed: bool = True, **kwargs) -> str:
         """Get detailed body style information.
 
         Args:

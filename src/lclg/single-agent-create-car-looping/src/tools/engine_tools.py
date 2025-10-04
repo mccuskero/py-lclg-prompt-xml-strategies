@@ -98,7 +98,8 @@ class EngineConfigurationTool(BaseTool):
         vehicle_type: str = "sedan",
         performance_level: str = "standard",
         fuel_preference: str = "gasoline",
-        electric_capable: bool = False
+        electric_capable: bool = False,
+        **kwargs
     ) -> str:
         """Configure engine based on requirements.
 
@@ -209,7 +210,7 @@ class EngineSpecificationTool(BaseTool):
     description: str = ("Get detailed engine specifications including electrical requirements, "
                        "compartment constraints, and cooling needs for integration with other components.")
 
-    def _run(self, engine_type: str = "v6_gasoline") -> str:
+    def _run(self, engine_type: str = "v6_gasoline", **kwargs) -> str:
         """Get detailed engine specifications.
 
         Args:

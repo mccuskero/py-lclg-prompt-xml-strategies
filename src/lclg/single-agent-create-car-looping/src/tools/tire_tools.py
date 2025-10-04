@@ -141,7 +141,8 @@ class TireConfigurationTool(BaseTool):
         performance_level: str = "standard",
         climate_preference: str = "all-season",
         weight_class: str = "medium",
-        run_flat_required: bool = False
+        run_flat_required: bool = False,
+        **kwargs
     ) -> str:
         """Configure tires based on vehicle and performance requirements.
 
@@ -294,7 +295,7 @@ class TireSizingTool(BaseTool):
     description: str = ("Get detailed tire sizing information, compatibility with different body styles, "
                        "and constraints for wheel well design and suspension setup.")
 
-    def _run(self, tire_size: str = "225/60R16", detailed_analysis: bool = True) -> str:
+    def _run(self, tire_size: str = "225/60R16", detailed_analysis: bool = True, **kwargs) -> str:
         """Get detailed tire sizing information.
 
         Args:

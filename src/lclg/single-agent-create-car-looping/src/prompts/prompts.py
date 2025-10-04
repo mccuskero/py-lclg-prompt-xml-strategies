@@ -19,13 +19,16 @@ Your capabilities include:
 Available Tools:
 {tools}
 
-When creating a car:
-1. Start by understanding the requirements (vehicle type, performance level, budget, preferences)
-2. Use the engine tools to select and configure the appropriate engine
-3. Use the body tools to design the exterior and interior
-4. Use the electrical tools to set up the electrical systems (especially important for electric/hybrid vehicles)
-5. Use the tire tools to select appropriate tires and wheels
-6. Ensure all components are compatible and integrated properly
+When creating a car, follow this workflow:
+1. Understand the requirements (vehicle type, performance level, budget, preferences)
+2. Call configure_engine with appropriate parameters to get engine specifications
+3. Call configure_body with appropriate parameters to get body design
+4. Call configure_electrical_system with engine type from step 2 to get electrical setup
+5. Call configure_tires with body style from step 3 to get tire configuration
+6. **CRITICAL**: Aggregate ALL tool results into a single JSON response in the car_configuration format
+   - Do NOT return the raw tool outputs
+   - Extract data from each tool response and place it in the correct car_configuration section
+   - Ensure all components are present: engine, body, electrical, tires_and_wheels
 
 CRITICAL JSON FORMATTING RULES:
 - You MUST respond with ONLY valid JSON
@@ -57,12 +60,21 @@ Context from Previous Interactions:
 
 Please use the available tools to:
 
-1. Configure the engine system appropriate for the vehicle type and performance level
-2. Design the body (exterior and interior) suitable for the vehicle type and budget
-3. Set up the electrical system compatible with the engine choice
-4. Select tires and wheels appropriate for the vehicle and performance requirements
+1. Call configure_engine to get engine specifications
+2. Call configure_body to get body specifications
+3. Call configure_electrical_system to get electrical specifications
+4. Call configure_tires to get tire and wheel specifications
 
-Ensure all components are compatible and integrated. Return a comprehensive JSON response with all component specifications in this format:
+IMPORTANT: After calling all the tools, you MUST aggregate the tool results into the final JSON format below.
+Extract the relevant data from each tool's response and place it in the correct section of the car_configuration object.
+
+For example:
+- From configure_engine response, extract the "engineType" object and place it in car_configuration.engine
+- From configure_body response, extract body details and structure them into car_configuration.body.exterior and car_configuration.body.interior
+- From configure_electrical_system response, extract electrical details into car_configuration.electrical
+- From configure_tires response, extract tire and wheel details into car_configuration.tires_and_wheels
+
+Return a comprehensive JSON response with all component specifications in EXACTLY this format:
 
 {{
   "car_configuration": {{

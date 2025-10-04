@@ -9,15 +9,12 @@ import time
 from pathlib import Path
 
 from langchain.tools import BaseTool
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+#from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_core.language_models.base import BaseLanguageModel
-from langgraph.prebuilt import create_react_agent
-
-
+from langchain.agents import create_agent
 
 logger = logging.getLogger(__name__)
-
 
 class AgentMessage(BaseModel):
     """Message structure for agent communication."""
@@ -186,9 +183,10 @@ class BaseAgent(ABC):
                 logger.debug(f"SystemMessage preview: {system_content[:150]}...")
                 logger.debug(f"HumanMessage preview: {human_content[:150]}...")
 
-            # The core `create_react_agent` function from LangChain 1.0.0a9
-            self.agent_graph = create_react_agent(self.llm, 
-                                                  self.tools)
+            
+            # ================================================
+            # Run the Agent
+            self.agent = create_agent(self.llm, self.tools)
             
             inputs = {
                 "messages": [
@@ -196,21 +194,62 @@ class BaseAgent(ABC):
                     HumanMessage(content=human_content)
                 ]
             }
-            
-            response_message = self.agent_graph.invoke(
+
+            response_message = self.agent.invoke(
                 inputs,
                 config=config
             )
 
+            # ================================================
+
             if self.enable_logging:
                 logger.debug(f"LLM invocation completed")
+                logger.debug(f"Response type: {type(response_message)}")
 
-            # Extract response content
-            response_content = response_message.content if hasattr(response_message, 'content') else str(response_message)
+            # Extract response content from agent response
+            # The agent returns a dict with 'messages' key containing the conversation
+            if isinstance(response_message, dict) and 'messages' in response_message:
+                # Get the last message from the agent (the final AI response)
+                messages = response_message['messages']
+                if self.enable_logging:
+                    logger.debug(f"Found {len(messages)} messages in response")
+                    logger.debug(f"Message types: {[type(m).__name__ for m in messages]}")
+
+                # Find the last AIMessage in the list
+                # AIMessage is the final response from the agent after tool calls
+                last_ai_message = None
+                for msg in reversed(messages):
+                    msg_type = type(msg).__name__
+                    if hasattr(msg, 'content'):
+                        if msg_type == 'AIMessage':
+                            last_ai_message = msg
+                            break
+                        elif last_ai_message is None:
+                            # Fallback to any message with content if no AIMessage found
+                            last_ai_message = msg
+
+                if last_ai_message:
+                    response_content = last_ai_message.content
+                    if self.enable_logging:
+                        logger.debug(f"Extracted content from {type(last_ai_message).__name__}")
+                else:
+                    if self.enable_logging:
+                        logger.warning("No message with content found in response")
+                    response_content = str(response_message)
+            else:
+                # Fallback for direct message responses
+                response_content = response_message.content if hasattr(response_message, 'content') else str(response_message)
 
             if self.enable_logging:
                 logger.debug(f"Extracted response content ({len(response_content)} chars)")
-                logger.debug(f"Response preview: {response_content[:200]}...")
+                logger.debug(f"Response preview: {response_content[:500]}...")
+                # Log to a separate file for full response analysis
+                try:
+                    with open("full_response_debug.log", "w") as f:
+                        f.write(response_content)
+                    logger.debug("Full response written to full_response_debug.log")
+                except Exception as e:
+                    logger.debug(f"Could not write full response: {e}")
 
             # Add to memory
             self.memory.add_message("assistant", response_content)

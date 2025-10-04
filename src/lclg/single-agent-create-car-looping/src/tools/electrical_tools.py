@@ -166,7 +166,8 @@ class ElectricalConfigurationTool(BaseTool):
         engine_type: str = "v6_gasoline",
         vehicle_class: str = "standard",
         feature_level: str = "basic",
-        climate_requirements: str = "standard"
+        climate_requirements: str = "standard",
+        **kwargs
     ) -> str:
         """Configure electrical system based on engine and vehicle requirements.
 
@@ -357,7 +358,8 @@ class ElectricalSystemTool(BaseTool):
         self,
         system_type: str = "12V",
         detailed_analysis: bool = True,
-        compatibility_check: str = "all"
+        compatibility_check: str = "all",
+        **kwargs
     ) -> str:
         """Get detailed electrical system information.
 

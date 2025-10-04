@@ -20,6 +20,7 @@ uv run python -m cli --log-level INFO interactive --model llama3.2
 
 # Or run a single request
 uv run python -m cli --log-level INFO single --model llama3.2
+uv run python -m cli --log-level DEBUG single --model llama3.2
 ```
 
 ## Requirements
