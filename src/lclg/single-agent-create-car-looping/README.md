@@ -97,6 +97,9 @@ ollama pull llama3.2
 4. Verify OLLAMA is running:
 ```bash
 curl http://localhost:11434/api/tags
+
+# this gives you some meta data on the ollama server. 
+curl -s http://cignusx1.local:11434/api/tags | head -20
 ```
 
 ## Installation
