@@ -35,7 +35,8 @@ def run_interactive_mode(args):
         model_name=args.model,
         base_url=args.base_url,
         temperature=args.temperature,
-        enable_logging=not args.no_logging
+        enable_logging=not args.no_logging,
+        log_llm_comms=args.log_llm_comms
     )
 
     system.interactive_session()
@@ -65,7 +66,8 @@ def run_single_request(args):
         model_name=args.model,
         base_url=args.base_url,
         temperature=args.temperature,
-        enable_logging=not args.no_logging
+        enable_logging=not args.no_logging,
+        log_llm_comms=args.log_llm_comms
     )
 
     result = system.run_single_request(requirements)
@@ -124,6 +126,12 @@ Examples:
         "--no-logging",
         action="store_true",
         help="Disable logging"
+    )
+
+    parser.add_argument(
+        "--log-llm-comms",
+        action="store_true",
+        help="Log full LLM communications (requests and responses) at DEBUG level"
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Command to run")

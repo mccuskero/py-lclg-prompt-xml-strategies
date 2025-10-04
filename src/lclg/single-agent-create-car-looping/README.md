@@ -284,6 +284,12 @@ uv run python -m cli --log-level WARNING interactive --model llama3.2
 
 # Disable logging
 uv run python -m cli --no-logging interactive --model llama3.2
+
+# Log full LLM communications (requests and responses)
+uv run python -m cli --log-level DEBUG --log-llm-comms interactive --model llama3.2
+
+# Combine with single mode for detailed debugging
+uv run python -m cli --log-level DEBUG --log-llm-comms single --model llama3.2
 ```
 
 ## Configuration
@@ -577,10 +583,82 @@ uv run python cli.py interactive --log-level WARNING
 uv run python cli.py interactive --no-logging
 ```
 
+### Advanced Logging: Full LLM Communications
+
+Use the `--log-llm-comms` flag to capture complete LLM request/response data at DEBUG level. This is extremely useful for:
+- Understanding how the agent is calling tools
+- Debugging JSON parsing issues
+- Seeing the exact prompts sent to the LLM
+- Viewing all intermediate tool call messages
+- Analyzing agent decision-making
+
+```bash
+# Enable full LLM communication logging
+uv run python -m cli --log-level DEBUG --log-llm-comms single --model llama3.2
+
+# View the detailed logs
+tail -f car_creation.log
+```
+
+**What gets logged with `--log-llm-comms`:**
+- Full system message (including all tool descriptions)
+- Full human message (requirements and context)
+- All messages in the conversation chain:
+  - 🔧 **Tool Call Requests**: Shows exactly which tools the LLM requested, with:
+    - Tool name
+    - Tool ID
+    - Arguments passed to each tool (formatted JSON)
+  - ✅ **Tool Results**: Shows the response from each tool execution
+  - Intermediate LLM responses
+  - Final AI message
+- Additional metadata from each message
+
+**Example log output with `--log-llm-comms`:**
+```
+🔧 TOOL CALLS REQUESTED BY LLM:
+
+  Tool Call 1:
+    Tool Name: configure_engine
+    Tool ID: call_abc123
+    Arguments: {
+      "vehicle_type": "sedan",
+      "performance_level": "standard",
+      "fuel_preference": "gasoline"
+    }
+
+✅ TOOL RESULT (from configure_engine):
+    Result: {
+      "engineType": {
+        "displacement": "3.5L",
+        "cylinders": "6",
+        "fuelType": "gasoline"
+      }
+    }
+```
+
+This flag adds significant verbosity but is invaluable for debugging complex agent behaviors.
+
 View the log file:
 ```bash
 tail -f car_creation.log
+
+# Or filter for LLM communications only
+grep -A 20 "LLM REQUEST\|LLM RESPONSE" car_creation.log
+
+# Filter for tool call summaries
+grep "🔧" car_creation.log
+
+# Filter for tool results
+grep "✅" car_creation.log
 ```
+
+**Logging Levels Summary:**
+
+| Log Level | What You See | Use Case |
+|-----------|--------------|----------|
+| INFO | Tool call summaries: "🔧 LLM requested 4 tool(s): configure_engine, configure_body..." | Normal operation monitoring |
+| DEBUG | Tool call details with arguments: "→ configure_engine(vehicle_type=sedan, performance=standard)" | Detailed troubleshooting |
+| DEBUG + `--log-llm-comms` | Full conversation flow with complete tool requests, arguments, and results | Deep debugging of agent behavior |
 
 ## Troubleshooting
 
@@ -632,7 +710,12 @@ uv run python cli.py interactive --temperature 0.0
 
 # Check the logs for the raw response
 tail -n 50 car_creation.log
+
+# Check the full_response_debug.log file for detailed response analysis
+cat full_response_debug.log
 ```
+
+**Note:** The system automatically handles multiple JSON objects in LLM responses. When the LLM returns tool results as comma-separated JSON objects (e.g., `{engine}, {body}, {tires}, {electrical}`), the parser wraps them in array brackets and merges all objects into a single configuration. This ensures all component data is captured correctly.
 
 #### 4. Import Errors
 
@@ -760,6 +843,27 @@ This project implements the standard LangChain agent pattern using the `create_a
 - **Context accumulation** across iterations
 - **Automatic context injection** into prompts
 - **Metadata tracking** for configured components
+
+### Multi-Object JSON Response Handling
+
+The system includes intelligent JSON parsing that handles LLM responses containing multiple JSON objects:
+
+**Problem:** LLMs using tools may return multiple JSON objects in a single response:
+```json
+{engine_config},
+{body_config},
+{tire_config},
+{electrical_config}
+```
+
+**Solution:** The `_extract_json_from_response` method in `BaseAgent`:
+1. Detects comma-separated JSON objects in the response
+2. Wraps them in array brackets: `[{...}, {...}, {...}]`
+3. Parses as a JSON array
+4. Merges all objects into a single dictionary
+5. Returns the complete merged configuration
+
+This ensures all tool results are captured and integrated into the final car configuration, preventing data loss from partial parsing.
 
 ## License
 

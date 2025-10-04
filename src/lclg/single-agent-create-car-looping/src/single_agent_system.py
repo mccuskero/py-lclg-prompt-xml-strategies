@@ -21,7 +21,8 @@ class SingleAgentSystem:
         model_name: str = "llama3.2",
         base_url: str = "http://localhost:11434",
         temperature: float = 0.1,
-        enable_logging: bool = True
+        enable_logging: bool = True,
+        log_llm_comms: bool = False
     ):
         """
         Initialize the Single Agent System.
@@ -31,8 +32,10 @@ class SingleAgentSystem:
             base_url: The base URL for the OLLAMA server
             temperature: Temperature for LLM generation
             enable_logging: Whether to enable logging
+            log_llm_comms: Whether to log full LLM communications at DEBUG level
         """
         self.enable_logging = enable_logging
+        self.log_llm_comms = log_llm_comms
 
         if self.enable_logging:
             logger.info(
@@ -40,7 +43,8 @@ class SingleAgentSystem:
                 extra={
                     "model_name": model_name,
                     "base_url": base_url,
-                    "temperature": temperature
+                    "temperature": temperature,
+                    "log_llm_comms": log_llm_comms
                 }
             )
 
@@ -55,7 +59,8 @@ class SingleAgentSystem:
         self.agent = CarAgent(
             llm=self.llm,
             temperature=temperature,
-            enable_logging=enable_logging
+            enable_logging=enable_logging,
+            log_llm_comms=log_llm_comms
         )
 
         self.session_active = False

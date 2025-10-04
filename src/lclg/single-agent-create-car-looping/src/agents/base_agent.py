@@ -14,7 +14,11 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain.agents import create_agent
 
+
+
+
 logger = logging.getLogger(__name__)
+
 
 class AgentMessage(BaseModel):
     """Message structure for agent communication."""
@@ -70,10 +74,12 @@ class BaseAgent(ABC):
         name: str,
         llm: BaseLanguageModel,
         temperature: float = 0.1,
-        enable_logging: bool = True
+        enable_logging: bool = True,
+        log_llm_comms: bool = False
     ):
         self.name = name
         self.enable_logging = enable_logging
+        self.log_llm_comms = log_llm_comms
         self.llm = llm
         self.tools: List[BaseTool] = []
         self.memory = ConversationMemory()
@@ -183,11 +189,22 @@ class BaseAgent(ABC):
                 logger.debug(f"SystemMessage preview: {system_content[:150]}...")
                 logger.debug(f"HumanMessage preview: {human_content[:150]}...")
 
-            
+            # Log full LLM request if flag is enabled
+            if self.log_llm_comms:
+                logger.debug("=" * 80)
+                logger.debug("LLM REQUEST - FULL SYSTEM MESSAGE:")
+                logger.debug("=" * 80)
+                logger.debug(system_content)
+                logger.debug("=" * 80)
+                logger.debug("LLM REQUEST - FULL HUMAN MESSAGE:")
+                logger.debug("=" * 80)
+                logger.debug(human_content)
+                logger.debug("=" * 80)
+
             # ================================================
             # Run the Agent
             self.agent = create_agent(self.llm, self.tools)
-            
+
             inputs = {
                 "messages": [
                     SystemMessage(content=system_content),
@@ -214,6 +231,62 @@ class BaseAgent(ABC):
                 if self.enable_logging:
                     logger.debug(f"Found {len(messages)} messages in response")
                     logger.debug(f"Message types: {[type(m).__name__ for m in messages]}")
+
+                    # Log tool calls summary even without --log-llm-comms
+                    tool_calls_found = []
+                    for msg in messages:
+                        if hasattr(msg, 'tool_calls') and msg.tool_calls:
+                            for tc in msg.tool_calls:
+                                tool_name = tc.get('name', 'unknown')
+                                tool_args = tc.get('args', {})
+                                tool_calls_found.append({
+                                    'name': tool_name,
+                                    'args': tool_args
+                                })
+
+                    if tool_calls_found:
+                        logger.info(f"🔧 LLM requested {len(tool_calls_found)} tool(s): {', '.join([t['name'] for t in tool_calls_found])}")
+                        for tc in tool_calls_found:
+                            logger.debug(f"   → {tc['name']}({', '.join([f'{k}={v}' for k, v in tc['args'].items()])})")
+
+                # Log all messages in the conversation if flag is enabled
+                if self.log_llm_comms:
+                    logger.debug("=" * 80)
+                    logger.debug("LLM RESPONSE - ALL MESSAGES IN CONVERSATION:")
+                    logger.debug("=" * 80)
+                    for idx, msg in enumerate(messages):
+                        msg_type = type(msg).__name__
+                        logger.debug(f"\n--- Message {idx + 1}/{len(messages)} ({msg_type}) ---")
+
+                        # Handle AIMessage with tool calls
+                        if msg_type == 'AIMessage' and hasattr(msg, 'tool_calls') and msg.tool_calls:
+                            logger.debug(f"\n🔧 TOOL CALLS REQUESTED BY LLM:")
+                            for tool_idx, tool_call in enumerate(msg.tool_calls):
+                                logger.debug(f"\n  Tool Call {tool_idx + 1}:")
+                                logger.debug(f"    Tool Name: {tool_call.get('name', 'N/A')}")
+                                logger.debug(f"    Tool ID: {tool_call.get('id', 'N/A')}")
+                                logger.debug(f"    Arguments: {json.dumps(tool_call.get('args', {}), indent=6)}")
+
+                        # Handle ToolMessage with results
+                        elif msg_type == 'ToolMessage':
+                            tool_name = getattr(msg, 'name', 'unknown')
+                            logger.debug(f"\n✅ TOOL RESULT (from {tool_name}):")
+                            if hasattr(msg, 'content'):
+                                # Try to pretty-print JSON content
+                                try:
+                                    result_json = json.loads(msg.content)
+                                    logger.debug(f"    Result: {json.dumps(result_json, indent=6)}")
+                                except:
+                                    logger.debug(f"    Result: {msg.content}")
+
+                        # Handle regular content
+                        elif hasattr(msg, 'content') and msg.content:
+                            logger.debug(f"Content: {msg.content}")
+
+                        # Additional kwargs
+                        if hasattr(msg, 'additional_kwargs') and msg.additional_kwargs:
+                            logger.debug(f"Additional kwargs: {msg.additional_kwargs}")
+                    logger.debug("=" * 80)
 
                 # Find the last AIMessage in the list
                 # AIMessage is the final response from the agent after tool calls
@@ -340,6 +413,25 @@ class BaseAgent(ABC):
                 return result
             except json.JSONDecodeError:
                 logger.debug("Entire response is not valid JSON, trying other methods...")
+
+            # Try to handle multiple JSON objects separated by commas
+            # This is a common pattern when LLMs return multiple tool results
+            try:
+                # Wrap in array brackets and parse
+                array_wrapped = f"[{response.strip()}]"
+                results = json.loads(array_wrapped)
+                if isinstance(results, list) and len(results) > 0:
+                    logger.debug(f"Successfully parsed {len(results)} JSON objects from comma-separated list")
+                    # Merge all objects into one
+                    merged = {}
+                    for obj in results:
+                        if isinstance(obj, dict):
+                            merged.update(obj)
+                    if merged:
+                        logger.debug(f"Merged {len(results)} objects into single result with keys: {list(merged.keys())}")
+                        return merged
+            except json.JSONDecodeError:
+                logger.debug("Response is not a comma-separated list of JSON objects")
 
             # Look for JSON blocks marked with ```json or ```
             import re
