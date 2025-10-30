@@ -77,6 +77,8 @@ class SingleAgentSystem:
         print("=" * 60)
         print("\nThis system will help you design and configure a complete car.")
         print("The agent will remember context from previous interactions.")
+        print("\n✨ NEW: The agent can now ask you questions to better understand")
+        print("        your preferences and create a personalized car configuration!")
         print("\nCommands:")
         print("  - Type your car requirements naturally")
         print("  - Type 'reset' to clear the context and start fresh")
@@ -133,6 +135,7 @@ class SingleAgentSystem:
     def _process_iteration(self, user_input: str) -> Dict[str, Any]:
         """
         Process a single iteration of the interactive session.
+        Handles user questions from the LLM and continues the conversation.
 
         Args:
             user_input: The user's input text
@@ -149,6 +152,40 @@ class SingleAgentSystem:
 
             # Process user request through the agent
             result = self.agent.process_user_request(user_input)
+
+            # Check if the LLM is asking a question to the user
+            while result.get("requires_user_input", False) and "user_question" in result:
+                question = result["user_question"]
+
+                if self.enable_logging:
+                    logger.info(f"LLM asking user: {question}")
+
+                # Display the question to the user
+                print(f"\n🤔 Agent Question: {question}")
+
+                # Get user's answer
+                user_answer = input("Your answer: ").strip()
+
+                if not user_answer:
+                    print("Please provide an answer or type 'skip' to skip this question.")
+                    user_answer = input("Your answer: ").strip()
+
+                if user_answer.lower() == "skip":
+                    # Add a default answer to context and continue
+                    self.agent.memory.add_context("skipped_question", question)
+                    user_answer = "User chose to skip this question. Please use reasonable defaults."
+
+                # Add the Q&A to context
+                self.agent.memory.add_context(f"question_{self.iteration_count}", question)
+                self.agent.memory.add_context(f"answer_{self.iteration_count}", user_answer)
+
+                if self.enable_logging:
+                    logger.info(f"User answered: {user_answer}")
+
+                # Continue processing with the user's answer
+                # Add the answer as a new requirement
+                follow_up_input = f"Based on my previous answer: {user_answer}. Continue with the car configuration."
+                result = self.agent.process_user_request(follow_up_input)
 
             if self.enable_logging:
                 logger.info(

@@ -21,9 +21,6 @@ uv run python -m cli --log-level INFO interactive --model llama3.2
 # Or run a single request
 uv run python -m cli --log-level INFO single --model llama3.2
 uv run python -m cli --log-level DEBUG single --model llama3.2
-
-# single requests with significant LLM comms info, with Tools calls
-uv run python -m cli --log-level DEBUG --log-llm-comms single --model llama3.2 
 ```
 
 ## Requirements
@@ -34,6 +31,7 @@ uv run python -m cli --log-level DEBUG --log-llm-comms single --model llama3.2
 ## Features
 
 - **Interactive Session**: Engage in a conversational loop with the agent to iteratively build car configurations
+- **Interactive User Querying** ✨ NEW: The LLM can now ask you clarifying questions during car creation to better understand your preferences
 - **Context Memory**: The agent remembers previous interactions and uses that context in subsequent requests
 - **Prompt Templates**: All prompts are managed using LangChain's prompt template framework
 - **Tool Integration**: Comprehensive car creation tools for engine, body, electrical, and tire configuration
@@ -97,9 +95,6 @@ ollama pull llama3.2
 4. Verify OLLAMA is running:
 ```bash
 curl http://localhost:11434/api/tags
-
-# this gives you some meta data on the ollama server. 
-curl -s http://cignusx1.local:11434/api/tags | head -20
 ```
 
 ## Installation
@@ -145,6 +140,34 @@ uv run python -m cli interactive --model llama3.2 --base-url http://your-server:
 - **`status`**: Display accumulated context and iteration count
 - **`save <filename>`**: Save the current configuration to a JSON file
 - **`quit`** or **`exit`**: End the session
+
+### Interactive User Querying
+
+The agent can now ask you questions during the car creation process to gather more information:
+
+```
+[Iteration 1] Your request: I want a sports car
+
+🤔 Agent Question: What color would you like for the car's exterior?
+Your answer: red
+
+🤔 Agent Question: Do you prefer manual or automatic transmission?
+Your answer: automatic
+
+✅ Car configuration created successfully!
+```
+
+**How It Works:**
+- The LLM identifies when it needs more information
+- It responds with: `{ "user_question": "Your question here?" }`
+- The system displays the question and waits for your answer
+- Your answer is stored in context and used to continue the configuration
+- You can type `skip` to use default values for any question
+
+**See Also:**
+- `INTERACTIVE_FEATURE.md` - Full documentation on the interactive querying feature
+- `QUICK_START.md` - Quick reference guide
+- `tests/unit/test_interactive_feature.py` - Test examples
 
 **Example Interactive Session:**
 ```
@@ -405,6 +428,12 @@ uv run pytest tests/unit/test_base_agent.py -v
 
 # Test car agent functionality
 uv run pytest tests/unit/test_car_agent.py -v
+
+# Test interactive user querying feature
+uv run pytest tests/unit/test_interactive_feature.py -v
+
+# Or run it directly as a standalone script
+python tests/unit/test_interactive_feature.py
 ```
 
 **Run Specific Test Class:**
@@ -460,6 +489,10 @@ uv run pytest tests/ -n auto
 **Unit Tests** (`tests/unit/`):
 - `test_base_agent.py`: Tests for BaseAgent, ConversationMemory, and AgentMessage
 - `test_car_agent.py`: Tests for CarAgent functionality, parsing, validation, and compatibility checks
+- `test_interactive_feature.py`: Tests for the interactive user querying feature (user_question extraction)
+- `test_prompts.py`: Tests for prompt template generation
+- `test_single_agent_system.py`: Tests for session management and interactive loops
+- `test_tools.py`: Tests for car creation tools (engine, body, electrical, tires)
 
 **Integration Tests** (`tests/integration/`):
 - Currently a placeholder for end-to-end integration tests

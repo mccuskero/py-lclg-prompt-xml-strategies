@@ -331,6 +331,22 @@ class BaseAgent(ABC):
                 logger.debug(f"Added assistant response to memory")
                 logger.debug(f"Received LLM response", extra={"response_length": len(response_content)})
 
+            # Check if LLM is asking a question to the user
+            if self.enable_logging:
+                logger.debug(f"Checking for user_question in response")
+
+            user_question = self._extract_question_json_from_response(response_content)
+
+            if user_question:
+                # LLM needs more information from the user
+                if self.enable_logging:
+                    logger.info(f"LLM requesting user input: {user_question}")
+                return {
+                    "user_question": user_question,
+                    "requires_user_input": True,
+                    "agent": self.name
+                }
+
             # Extract JSON from response
             if self.enable_logging:
                 logger.debug(f"Extracting JSON from response")
@@ -501,6 +517,80 @@ class BaseAgent(ABC):
                 text = text.rstrip().rstrip('}')
 
         return text
+
+    def _extract_question_json_from_response(self, response: str) -> Optional[str]:
+        """
+        Extract user_question JSON from LLM response.
+
+        The LLM can request information from the user by including JSON in this format:
+        { "user_question" : "LLM question goes here" }
+
+        Args:
+            response: The LLM response text
+
+        Returns:
+            The question string if found, None otherwise
+        """
+        try:
+            if self.enable_logging:
+                logger.debug("Checking response for user_question")
+
+            import re
+
+            # First try to parse the entire response as JSON
+            try:
+                result = json.loads(response.strip())
+                if isinstance(result, dict) and "user_question" in result:
+                    question = result["user_question"]
+                    if self.enable_logging:
+                        logger.info(f"Found user_question in response: {question}")
+                    return question
+            except json.JSONDecodeError:
+                pass
+
+            # Look for user_question pattern in the text
+            patterns = [
+                r'\{\s*["\']user_question["\']\s*:\s*["\']([^"\']+)["\']\s*\}',
+                r'user_question\s*:\s*["\']([^"\']+)["\']',
+                r'"user_question"\s*:\s*"([^"]+)"',
+            ]
+
+            for pattern in patterns:
+                match = re.search(pattern, response, re.IGNORECASE)
+                if match:
+                    question = match.group(1)
+                    if self.enable_logging:
+                        logger.info(f"Found user_question via pattern: {question}")
+                    return question
+
+            # Look for JSON blocks that might contain user_question
+            json_block_patterns = [
+                r'```json\s*(\{.*?\})\s*```',
+                r'```\s*(\{.*?\})\s*```',
+            ]
+
+            for pattern in json_block_patterns:
+                match = re.search(pattern, response, re.DOTALL)
+                if match:
+                    json_text = match.group(1)
+                    try:
+                        result = json.loads(json_text)
+                        if isinstance(result, dict) and "user_question" in result:
+                            question = result["user_question"]
+                            if self.enable_logging:
+                                logger.info(f"Found user_question in JSON block: {question}")
+                            return question
+                    except json.JSONDecodeError:
+                        continue
+
+            if self.enable_logging:
+                logger.debug("No user_question found in response")
+            return None
+
+        except Exception as e:
+            if self.enable_logging:
+                logger.error(f"Error extracting user_question: {str(e)}", exc_info=True)
+            return None
 
     @abstractmethod
     def _validate_component_data(self, component_data: Dict[str, Any]) -> Dict[str, Any]:
