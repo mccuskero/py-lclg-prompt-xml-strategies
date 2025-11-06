@@ -1,0 +1,22 @@
+{
+  "messages": [
+    {
+      "type": "HumanMessage",
+      "content": "Create a high-performance sports car with V8 engine, red exterior, and premium features"
+    },
+    {
+      "type": "AIMessage",
+      "content": "I'll create a high-performance sports car configuration for you."
+    }
+  ],
+  "context": {
+    "vehicle_type": "sports",
+    "performance_level": "high",
+    "fuel_preference": "gasoline",
+    "budget": "high",
+    "configuration_complete": true,
+    "car_type_created": "sports",
+    "power_output": "500 HP"
+  },
+  "summary": "Accumulated Context:\n- vehicle_type: sports\n- performance_level: high\n- fuel_preference: gasoline\n- budget: high\n- configuration_complete: True\n- car_type_created: sports\n- power_output: 500 HP\n"
+}

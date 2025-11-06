@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated JSON Schema for electricalSystemEnum",
+  "properties": {},
+  "type": "string",
+  "enum": [
+    "12V",
+    "24V",
+    "hybrid",
+    "high-voltage"
+  ],
+  "$id": "http://example.com/types/electricalSystemEnum"
+}

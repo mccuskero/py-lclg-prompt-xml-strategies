@@ -1,0 +1,143 @@
+{
+  "car_configuration": {
+    "vehicle_info": {
+      "@id": "CAR-2024-SPORTS-001",
+      "type": "sports",
+      "category": "performance",
+      "year": "2024",
+      "manufacturer": "Generic Motors"
+    },
+    "engine": {
+      "@engineCode": "V8-500-TURBO",
+      "@manufacturer": "Performance Motors",
+      "displacement": "5.0L",
+      "cylinders": "8",
+      "configuration": "V8",
+      "fuelType": "gasoline",
+      "horsepower": "500 HP",
+      "torque": "450 lb-ft",
+      "aspiration": "twin-turbocharged",
+      "redline": "7000 RPM"
+    },
+    "body": {
+      "exterior": {
+        "@paintCode": "PERFORMANCE-RED-2024",
+        "@customized": "true",
+        "style": "coupe",
+        "color": "red",
+        "doors": "2",
+        "material": "carbon-fiber-aluminum",
+        "aerodynamics": "active-aero",
+        "drag_coefficient": "0.28"
+      },
+      "interior": {
+        "seating": "4-passenger",
+        "upholstery": "premium-leather",
+        "dashboard": "digital-cockpit",
+        "trim": "carbon-fiber",
+        "steering_wheel": "alcantara-wrapped"
+      }
+    },
+    "electrical": {
+      "@systemType": "12V",
+      "@hybridCapable": "false",
+      "main_system": {
+        "voltage_system": "12V",
+        "battery_capacity": "100Ah",
+        "alternator_output": "200A"
+      },
+      "battery": {
+        "voltage": "12V",
+        "capacity": "100Ah",
+        "type": "AGM-performance",
+        "cold_cranking_amps": "950"
+      },
+      "lighting": {
+        "headlights": "matrix-LED",
+        "taillights": "OLED",
+        "fog_lights": "LED",
+        "interior": "ambient-RGB-LED"
+      }
+    },
+    "tires_and_wheels": {
+      "tires": {
+        "@position": "all-corners",
+        "brand": "Performance Plus Pro",
+        "size_front": "255/35R20",
+        "size_rear": "295/30R20",
+        "pressure": "36 PSI",
+        "type": "summer-performance-compound"
+      },
+      "wheels": {
+        "size_front": "20x9 inch",
+        "size_rear": "20x11 inch",
+        "material": "forged-aluminum",
+        "design": "multi-spoke-performance",
+        "finish": "gloss-black"
+      }
+    },
+    "performance_specs": {
+      "acceleration_0_60": "3.2 seconds",
+      "acceleration_0_100": "7.5 seconds",
+      "quarter_mile": "11.3 seconds",
+      "top_speed": "198 mph",
+      "horsepower_to_weight": "0.17 HP/lb",
+      "braking_60_0": "95 feet"
+    },
+    "fuel_economy": {
+      "city": "14 mpg",
+      "highway": "21 mpg",
+      "combined": "17 mpg",
+      "tank_capacity": "18.5 gallons"
+    },
+    "features": {
+      "safety": {
+        "item": [
+          "ABS with EBD",
+          "Electronic Stability Control",
+          "Traction Control",
+          "Airbags (10 total)",
+          "Blind Spot Monitoring",
+          "Lane Departure Warning",
+          "Forward Collision Warning",
+          "Automatic Emergency Braking"
+        ]
+      },
+      "technology": {
+        "item": [
+          "Adaptive Cruise Control",
+          "GPS Navigation with Real-Time Traffic",
+          "Premium 12-Speaker Sound System",
+          "Apple CarPlay & Android Auto",
+          "Wireless Phone Charging",
+          "Head-Up Display",
+          "360-Degree Camera System"
+        ]
+      },
+      "comfort": {
+        "item": [
+          "Dual-Zone Climate Control",
+          "Heated & Ventilated Seats",
+          "Power Adjustable Sport Seats",
+          "Keyless Entry & Start",
+          "Auto-Dimming Mirrors",
+          "Rain-Sensing Wipers"
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "created_by": "car_agent",
+    "creation_method": "single_agent_system_with_langchain_memory",
+    "memory_backend": "langchain_in_memory",
+    "requirements_used": {
+      "vehicle_type": "sports",
+      "performance_level": "high",
+      "fuel_preference": "gasoline",
+      "budget": "high"
+    },
+    "performance_category": "high_performance",
+    "estimated_compatibility": "compatible",
+    "configuration_complete": "true"
+  }
+}

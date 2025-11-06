@@ -1,0 +1,130 @@
+<?xml version="1.0" ?>
+<vehicle timestamp="2025-11-06T14:56:09.594020" generator="single-agent-car-creation-system" memory_backend="langchain-in-memory">
+  <car_configuration>
+    <vehicle_info id="CAR-2024-SPORTS-001">
+      <type>sports</type>
+      <category>performance</category>
+      <year>2024</year>
+      <manufacturer>Generic Motors</manufacturer>
+    </vehicle_info>
+    <engine engineCode="V8-500-TURBO" manufacturer="Performance Motors">
+      <displacement>5.0L</displacement>
+      <cylinders>8</cylinders>
+      <configuration>V8</configuration>
+      <fuelType>gasoline</fuelType>
+      <horsepower>500 HP</horsepower>
+      <torque>450 lb-ft</torque>
+      <aspiration>twin-turbocharged</aspiration>
+      <redline>7000 RPM</redline>
+    </engine>
+    <body>
+      <exterior paintCode="PERFORMANCE-RED-2024" customized="true">
+        <style>coupe</style>
+        <color>red</color>
+        <doors>2</doors>
+        <material>carbon-fiber-aluminum</material>
+        <aerodynamics>active-aero</aerodynamics>
+        <drag_coefficient>0.28</drag_coefficient>
+      </exterior>
+      <interior>
+        <seating>4-passenger</seating>
+        <upholstery>premium-leather</upholstery>
+        <dashboard>digital-cockpit</dashboard>
+        <trim>carbon-fiber</trim>
+        <steering_wheel>alcantara-wrapped</steering_wheel>
+      </interior>
+    </body>
+    <electrical systemType="12V" hybridCapable="false">
+      <main_system>
+        <voltage_system>12V</voltage_system>
+        <battery_capacity>100Ah</battery_capacity>
+        <alternator_output>200A</alternator_output>
+      </main_system>
+      <battery>
+        <voltage>12V</voltage>
+        <capacity>100Ah</capacity>
+        <type>AGM-performance</type>
+        <cold_cranking_amps>950</cold_cranking_amps>
+      </battery>
+      <lighting>
+        <headlights>matrix-LED</headlights>
+        <taillights>OLED</taillights>
+        <fog_lights>LED</fog_lights>
+        <interior>ambient-RGB-LED</interior>
+      </lighting>
+    </electrical>
+    <tires_and_wheels>
+      <tires position="all-corners">
+        <brand>Performance Plus Pro</brand>
+        <size_front>255/35R20</size_front>
+        <size_rear>295/30R20</size_rear>
+        <pressure>36 PSI</pressure>
+        <type>summer-performance-compound</type>
+      </tires>
+      <wheels>
+        <size_front>20x9 inch</size_front>
+        <size_rear>20x11 inch</size_rear>
+        <material>forged-aluminum</material>
+        <design>multi-spoke-performance</design>
+        <finish>gloss-black</finish>
+      </wheels>
+    </tires_and_wheels>
+    <performance_specs>
+      <acceleration_0_60>3.2 seconds</acceleration_0_60>
+      <acceleration_0_100>7.5 seconds</acceleration_0_100>
+      <quarter_mile>11.3 seconds</quarter_mile>
+      <top_speed>198 mph</top_speed>
+      <horsepower_to_weight>0.17 HP/lb</horsepower_to_weight>
+      <braking_60_0>95 feet</braking_60_0>
+    </performance_specs>
+    <fuel_economy>
+      <city>14 mpg</city>
+      <highway>21 mpg</highway>
+      <combined>17 mpg</combined>
+      <tank_capacity>18.5 gallons</tank_capacity>
+    </fuel_economy>
+    <features>
+      <safety>
+        <item>ABS with EBD</item>
+        <item>Electronic Stability Control</item>
+        <item>Traction Control</item>
+        <item>Airbags (10 total)</item>
+        <item>Blind Spot Monitoring</item>
+        <item>Lane Departure Warning</item>
+        <item>Forward Collision Warning</item>
+        <item>Automatic Emergency Braking</item>
+      </safety>
+      <technology>
+        <item>Adaptive Cruise Control</item>
+        <item>GPS Navigation with Real-Time Traffic</item>
+        <item>Premium 12-Speaker Sound System</item>
+        <item>Apple CarPlay &amp; Android Auto</item>
+        <item>Wireless Phone Charging</item>
+        <item>Head-Up Display</item>
+        <item>360-Degree Camera System</item>
+      </technology>
+      <comfort>
+        <item>Dual-Zone Climate Control</item>
+        <item>Heated &amp; Ventilated Seats</item>
+        <item>Power Adjustable Sport Seats</item>
+        <item>Keyless Entry &amp; Start</item>
+        <item>Auto-Dimming Mirrors</item>
+        <item>Rain-Sensing Wipers</item>
+      </comfort>
+    </features>
+  </car_configuration>
+  <metadata>
+    <created_by>car_agent</created_by>
+    <creation_method>single_agent_system_with_langchain_memory</creation_method>
+    <memory_backend>langchain_in_memory</memory_backend>
+    <requirements_used>
+      <vehicle_type>sports</vehicle_type>
+      <performance_level>high</performance_level>
+      <fuel_preference>gasoline</fuel_preference>
+      <budget>high</budget>
+    </requirements_used>
+    <performance_category>high_performance</performance_category>
+    <estimated_compatibility>compatible</estimated_compatibility>
+    <configuration_complete>true</configuration_complete>
+  </metadata>
+</vehicle>

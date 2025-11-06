@@ -1,0 +1,11 @@
+{
+  "vehicle_type": "sedan",
+  "performance_level": "standard",
+  "fuel_preference": "gasoline",
+  "budget": "medium",
+  "special_features": [
+    "sunroof",
+    "leather seats",
+    "navigation system"
+  ]
+}
